@@ -113,8 +113,7 @@ public class ThreeCardPoker {
    }
 
    private static int getHighCard(String cards) {
-     
-      
+
       return 0;
    }
 
@@ -262,7 +261,7 @@ public class ThreeCardPoker {
       boolean validInput = false;
       int val = 0;
       while (!validInput) {
-         System.out.print("Hoe many cards to discard [0,3]: ");
+         System.out.print("How many cards to discard [0,3]: ");
          try {
             val = Integer.parseInt(in.nextLine());
 
