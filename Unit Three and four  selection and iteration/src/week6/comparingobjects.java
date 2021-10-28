@@ -1,5 +1,5 @@
 package week6;
-
+/*
 public class comparingobjects {
     public static void main(String[] args) {
         // to compare strings(ANY OBJECT) we should use the equals method (.equals)
@@ -12,3 +12,4 @@ public class comparingobjects {
         System.out.println(str.equals(str3));
     }
 }
+*/
