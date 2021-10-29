@@ -50,10 +50,10 @@ topCard += getCard();
       String temp = processPlayer(playerHand, topCard, in);
       playerHand = temp.substring(0, temp.indexOf("-"));
       topCard = temp.substring(temp.indexOf("-") + 1);
-      temp = processComputer(c1Hand, topCard);
+      temp = processComputer(c1Hand, topCard, playerHand);
       c1Hand = temp.substring(0, temp.indexOf("-"));
       topCard = temp.substring(temp.indexOf("-") + 1);
-      temp = processComputer(c2Hand, topCard);
+      temp = processComputer(c2Hand, topCard, playerHand);
       c2Hand = temp.substring(0, temp.indexOf("-"));
       topCard = temp.substring(temp.indexOf("-") + 1);
 
@@ -89,10 +89,63 @@ if(!checkfacecard(playerHand, topCard) && !checksuitcard(playerHand, topCard)){
    
       return "7H 3D 4C-2D";
    }
-   private static String processComputer(String c1Hand, String topCard) {
+   private static String processComputer(String hand, String topCard, String playerHand) {
+//computer 1
+if(playerHand.length() <= 3){//rule 4 
+   if(checkfacecardomputer1(hand, topCard) && hand.indexOf("8") < 0){//rule 2 
+      //make it play the first face card that matches the top card in its hand that it can 
+   } else if(hand.indexOf("8") >= 0){//rule 3
+      //make them play the 8 and the first suit card in the hand change it too that suit 
+   }
+}
+      if(checksuitcardcomputer1(hand, topCard) && hand.indexOf("8") < 0){// rule 1 use && to also check if its not 8 
+         //make it play the first suit card in its hand that it can 
+      } else if(checkfacecardomputer1(hand, topCard) && hand.indexOf("8") < 0){//rule 2
+         //make it play the first face card that matches the top card in its hand that it can 
+      } else if(hand.indexOf("8") >= 0){//rule 3
+         //make them play the 8 and the first suit card in the hand change it too that suit 
+      }
+//computer 2 
+if(playerHand.length() <= 3 ){//rule 4
+   if(checkfacecardomputer2(hand, topCard) && hand.indexOf("8") < 0){//rule 2
+      //make it play the first face card that matches the top card in its hand that it can 
+   } else if(hand.indexOf("8") >= 0){ // rule 3
+      //make them play the 8 and the first suit card in the hand change it too that suit 
+   }
+}
+if(checksuitcardcomputer2(hand, topCard) && hand.indexOf("8") < 0){// rule 1 use && to also check if its not 8 
+   //make it play the first suit card in its hand that it can 
+} else if(checkfacecardomputer2(hand, topCard) && hand.indexOf("8") < 0){// rule 2
+   //make it play the first face card that matches the top card in its hand that it can 
+} else if(hand.indexOf("8") >= 0){ //rule 3
+   //make them play the 8 and the first suit card in the hand change it too that suit 
+}
+
 
       return "-4D";
    }
+   
+   private static boolean checkfacecardomputer1(String c1Hand, String topCard){
+      if(topCard.trim().length() == 3){
+      return c1Hand.contains(topCard.substring(0, 2));
+      } else{
+         return c1Hand.contains(topCard.substring(0, 1));
+      }
+         }
+         private static boolean checksuitcardcomputer1(String c1Hand, String topCard){
+      return c1Hand.contains(topCard.substring(topCard.length() - 1, topCard.length()));
+         }
+         private static boolean checkfacecardomputer2(String c2Hand, String topCard){
+            if(topCard.trim().length() == 3){
+            return c2Hand.contains(topCard.substring(0, 2));
+            } else{
+               return c2Hand.contains(topCard.substring(0, 1));
+            }
+               }
+               private static boolean checksuitcardcomputer2(String c2Hand, String topCard){
+            return c2Hand.contains(topCard.substring(topCard.length() - 1, topCard.length()));
+               }
+      
 
    private static boolean checkfacecard(String playerHand, String topCard){
 if(topCard.trim().length() == 3){
