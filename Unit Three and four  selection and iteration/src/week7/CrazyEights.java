@@ -124,7 +124,7 @@ if(checksuitcardcomputer2(hand, topCard) && hand.indexOf("8") < 0){// rule 1 use
 
       return "-4D";
    }
-   
+
    private static boolean checkfacecardomputer1(String c1Hand, String topCard){
       if(topCard.trim().length() == 3){
       return c1Hand.contains(topCard.substring(0, 2));
