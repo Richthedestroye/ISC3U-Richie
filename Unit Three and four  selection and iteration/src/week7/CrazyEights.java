@@ -2,8 +2,6 @@ package week7;
 
 import java.util.Scanner;
 
-import javax.swing.plaf.synth.SynthScrollBarUI;
-
 public class CrazyEights {
    private static final int NUM_SUITS = 4;
    private static final String HEARTS = "H";
@@ -52,10 +50,10 @@ public class CrazyEights {
          String temp = processPlayer(playerHand, topCard, in);
          playerHand = temp.substring(0, temp.indexOf("-"));
          topCard = temp.substring(temp.indexOf("-") + 1);
-         temp = processComputer(c1Hand, topCard, playerHand);
+         temp = processComputer(c1Hand, topCard, playerHand, c2Hand);
          c1Hand = temp.substring(0, temp.indexOf("-"));
          topCard = temp.substring(temp.indexOf("-") + 1);
-         temp = processComputer(c2Hand, topCard, playerHand);
+         temp = processComputer(c2Hand, topCard, playerHand, c1Hand);
          c2Hand = temp.substring(0, temp.indexOf("-"));
          topCard = temp.substring(temp.indexOf("-") + 1);
       }
@@ -74,8 +72,23 @@ public class CrazyEights {
             String card = in.nextLine().toUpperCase();
             if (validatecard(card)) {
                if (playerHand.indexOf(card) >= 0) {
-                  if(){//same thing as 8 but for card from scanner(card can be played onto top card)
-
+                  if (card.indexOf("8") < 0) {// same thing as 8 but for card from scanner(card can be played onto top
+                                              // card)
+                     if (topCard.trim().length() == 3) {
+                        if (card.contains(topCard.substring(0, 2))) {
+                           topCard = card;
+                           System.out.println(topCard);
+                        }
+                     } else {
+                        if (card.contains(topCard.substring(0, 1))) {
+                           topCard = card;
+                           System.out.println(topCard);
+                        }
+                     }
+                     if (card.contains(topCard.substring(topCard.length() - 1, topCard.length()))) {
+                        topCard = card;
+                        System.out.println(topCard);
+                     }
                   }
                   if (card.indexOf("8") > 0) { // check if its 8
                      // play the 8 and get rid of it in their hand and ask what they want to change
@@ -116,45 +129,84 @@ public class CrazyEights {
       return playerHand + "-" + topCard;
    }
 
-   private static String processComputer(String hand, String topCard, String playerHand) {
-      // computer 1
-      if (playerHand.length() <= 3) {// rule 4
-         if (checkfacecardomputer1(hand, topCard) && hand.indexOf("8") < 0) {// rule 2
+   private static String processComputer(String c1Hand, String topCard, String playerHand, String c2Hand) {
+      int maxcardsforcomp = 0;
+      boolean redocomp1 = true;
+      boolean redocomp2 = true;
+      int index = 0;
+      String card = "";
+      while (redocomp1) {
+         redocomp1 = false;
+         // computer 1
+         if (playerHand.length() <= 3 || c2Hand.length() <= 3) {// rule 4
+            if (checkfacecardomputer1(c1Hand, topCard) && c1Hand.indexOf("8") < 0) {// rule 2
+               // make it play the first face card that matches the top card in its hand that
+               // it can
+            } else if (c1Hand.indexOf("8") >= 0) {// rule 3
+               // make them play the 8 and the first suit card in the hand change it too that
+               // suit
+            }
+         }
+
+         if (checksuitcardcomputer1(c1Hand, topCard) && c1Hand.indexOf("8") < 0) {// rule 1
+            // make it play the first suit card in
+            // its hand that it can
+            index = (c1Hand.indexOf(topCard.length() - 1, topCard.length())) - 1; // doesnt work for 10 put in if loop
+                                                                                  // or something idk im dumb
+            card = c1Hand.substring(index, c1Hand.indexOf(" ", index));
+            topCard = "" + card;
+            c1Hand = c1Hand.replaceFirst(card + " ", "");
+
+         } else if (checkfacecardomputer1(c1Hand, topCard) && c1Hand.indexOf("8") < 0) {// rule 2
             // make it play the first face card that matches the top card in its hand that
             // it can
-         } else if (hand.indexOf("8") >= 0) {// rule 3
+         } else if (c1Hand.indexOf("8") >= 0) {// rule 3
             // make them play the 8 and the first suit card in the hand change it too that
             // suit
+         } else {
+            if (maxcardsforcomp < 5) {
+               c1Hand += getCard() + " ";
+               redocomp1 = true;
+               maxcardsforcomp++;
+            }
          }
       }
-      if (checksuitcardcomputer1(hand, topCard) && hand.indexOf("8") < 0) {// rule 1 use && to also check if its not 8
-         // make it play the first suit card in its hand that it can
-      } else if (checkfacecardomputer1(hand, topCard) && hand.indexOf("8") < 0) {// rule 2
-         // make it play the first face card that matches the top card in its hand that
-         // it can
-      } else if (hand.indexOf("8") >= 0) {// rule 3
-         // make them play the 8 and the first suit card in the hand change it too that
-         // suit
-      }
-      // computer 2
-      if (playerHand.length() <= 3) {// rule 4
-         if (checkfacecardomputer2(hand, topCard) && hand.indexOf("8") < 0) {// rule 2
+      while (redocomp2) {
+         redocomp2 = false;
+         // computer 2
+         if (playerHand.length() <= 3 || c1Hand.length() <= 3) {// rule 4
+            if (checkfacecardomputer2(c2Hand, topCard) && c2Hand.indexOf("8") < 0) {// rule 2
+               // make it play the first face card that matches the top card in its hand that
+               // it can
+            } else if (c2Hand.indexOf("8") >= 0) { // rule 3
+               // make them play the 8 and the first suit card in the hand change it too that
+               // suit
+            }
+         }
+         if (checksuitcardcomputer2(c2Hand, topCard) && c2Hand.indexOf("8") < 0) {// rule 1
+                                                                                  // make it play the first suit card in
+                                                                                  // its hand that it can
+            index = (c1Hand.indexOf(topCard.length() - 1, topCard.length())) - 1; // doesnt work for 10 put in if loop
+            // or something idk im dumb
+            card = c1Hand.substring(index, c1Hand.indexOf(" ", index));
+            topCard = "" + card;
+            c1Hand = c1Hand.replaceFirst(card + " ", "");
+
+         } else if (checkfacecardomputer2(c2Hand, topCard) && c2Hand.indexOf("8") < 0) {// rule 2
             // make it play the first face card that matches the top card in its hand that
             // it can
-         } else if (hand.indexOf("8") >= 0) { // rule 3
+         } else if (c2Hand.indexOf("8") >= 0) { // rule 3
             // make them play the 8 and the first suit card in the hand change it too that
             // suit
+         } else {
+            if (maxcardsforcomp < 5) {
+               c2Hand += getCard() + " ";
+               redocomp1 = true;
+               maxcardsforcomp++;
+            }
          }
       }
-      if (checksuitcardcomputer2(hand, topCard) && hand.indexOf("8") < 0) {// rule 1 use && to also check if its not 8
-         // make it play the first suit card in its hand that it can
-      } else if (checkfacecardomputer2(hand, topCard) && hand.indexOf("8") < 0) {// rule 2
-         // make it play the first face card that matches the top card in its hand that
-         // it can
-      } else if (hand.indexOf("8") >= 0) { // rule 3
-         // make them play the 8 and the first suit card in the hand change it too that
-         // suit
-      }
+
       return "-4D";
    }
 
