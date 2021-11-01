@@ -31,7 +31,10 @@ public class CrazyEights {
 
    }
 
-   private static String playRound(Scanner in) {
+   private static String playRound(Scanner in) { // this method does everything the game needs like dealing the cards at
+                                                 // the start and making the strings to hold the players hand and
+                                                 // decideding the topcard and caluculating the points and showing the
+                                                 // hands
 
       String playerHand = "";
       String c1Hand = "";
@@ -42,11 +45,19 @@ public class CrazyEights {
          c2Hand += getCard() + " ";
       }
 
-      String topCard = ""; // no eights
-      topCard += getCard();
+      String topCard = "";
+      topCard = getCard();
+      if (topCard.indexOf("8") >= 0) {
+         topCard = getCard();
+      }
 
       // "7H 3D AC JS-9D"
-      while (playerHand.length() > 0 || c1Hand.length() > 0 || c2Hand.length() > 0) {
+
+      while (playerHand.isBlank() == false || c1Hand.isBlank() == false || c2Hand.isBlank() == false) {
+         System.out.println("your hand is: " + playerHand);
+         System.out.println("comp1 hand is: " + makeintox(c1Hand));
+         System.out.println("comp2 hand is: " + makeintox(c2Hand));
+
          String temp = processPlayer(playerHand, topCard, in);
          playerHand = temp.substring(0, temp.indexOf("-"));
          topCard = temp.substring(temp.indexOf("-") + 1);
@@ -54,12 +65,170 @@ public class CrazyEights {
          c1Hand = temp.substring(0, temp.indexOf("-"));
          topCard = temp.substring(temp.indexOf("-") + 1);
          temp = processComputer(c2Hand, topCard, playerHand, c1Hand);
-         c2Hand = temp.substring(0, temp.indexOf("-"));
-         topCard = temp.substring(temp.indexOf("-") + 1);
+         c2Hand = temp.substring(temp.indexOf("*") + 1, temp.indexOf("#"));
+         topCard = temp.substring(temp.indexOf("#") + 1);
       }
-      return "37-0-12";
+
+      String points = calucpoints(playerHand, c1Hand, c2Hand);
+      String playerPoints = points.substring(0, points.indexOf("-"));
+      String c1Points = points.substring(points.indexOf("#") + 1, points.indexOf("*"));
+      String c2Points = points.substring(points.indexOf("*") + 1);
+      System.out.println("points from this round");
+      System.out.println("player points: " + playerPoints);
+      System.out.println("comp1 points: " + c1Points);
+      System.out.println("comp1 points: " + c2Points);
+      return points;
    }
 
+   // for scoring method
+   // interate through the string check if its = to value of card add that but for
+   // 8 or the jqk add 50 or 10 check if blank and make it 0 and add up
+
+   private static String calucpoints(String playerHand, String c1Hand, String c2Hand) {
+      int playerPoints = 0;
+      int c1Points = 0;
+      int c2Points = 0;
+      for (int i = 0; i < playerHand.length(); i++) {
+         if (playerHand.indexOf("8") > 0) {
+            playerPoints += 50;
+         }
+         if (playerHand.indexOf("Q") > 0) {
+            playerPoints += 10;
+         }
+         if (playerHand.indexOf("J") > 0) {
+            playerPoints += 10;
+         }
+         if (playerHand.indexOf("A") > 0) {
+            playerPoints += 1;
+         }
+         if (playerHand.indexOf("K") > 0) {
+            playerPoints += 10;
+         }
+         if (playerHand.indexOf("10") > 0) {
+            playerPoints += 10;
+         }
+         if (playerHand.indexOf("2") > 0) {
+            playerPoints += 2;
+         }
+         if (playerHand.indexOf("3") > 0) {
+            playerPoints += 3;
+         }
+         if (playerHand.indexOf("4") > 0) {
+            playerPoints += 4;
+         }
+         if (playerHand.indexOf("5") > 0) {
+            playerPoints += 5;
+         }
+         if (playerHand.indexOf("6") > 0) {
+            playerPoints += 6;
+         }
+         if (playerHand.indexOf("7") > 0) {
+            playerPoints += 7;
+         }
+         if (playerHand.indexOf("9") > 0) {
+            playerPoints += 9;
+         }
+
+      }
+      for (int i = 0; i < c1Hand.length(); i++) {
+         if (c1Hand.indexOf("8") > 0) {
+            c1Points += 50;
+         }
+         if (c1Hand.indexOf("Q") > 0) {
+            c1Points += 10;
+         }
+         if (c1Hand.indexOf("J") > 0) {
+            c1Points += 10;
+         }
+         if (c1Hand.indexOf("A") > 0) {
+            c1Points += 1;
+         }
+         if (c1Hand.indexOf("K") > 0) {
+            c1Points += 10;
+         }
+         if (c1Hand.indexOf("10") > 0) {
+            c1Points += 10;
+         }
+         if (c1Hand.indexOf("2") > 0) {
+            c1Points += 2;
+         }
+         if (c1Hand.indexOf("3") > 0) {
+            c1Points += 3;
+         }
+         if (c1Hand.indexOf("4") > 0) {
+            c1Points += 4;
+         }
+         if (c1Hand.indexOf("5") > 0) {
+            c1Points += 5;
+         }
+         if (c1Hand.indexOf("6") > 0) {
+            c1Points += 6;
+         }
+         if (c1Hand.indexOf("7") > 0) {
+            c1Points += 7;
+         }
+         if (c1Hand.indexOf("9") > 0) {
+            c1Points += 9;
+         }
+      }
+      for (int i = 0; i < c2Hand.length(); i++) {
+         if (c2Hand.indexOf("8") > 0) {
+            c2Points += 50;
+         }
+         if (c2Hand.indexOf("Q") > 0) {
+            c2Points += 10;
+         }
+         if (c2Hand.indexOf("J") > 0) {
+            c2Points += 10;
+         }
+         if (c2Hand.indexOf("A") > 0) {
+            c2Points += 1;
+         }
+         if (c2Hand.indexOf("K") > 0) {
+            c2Points += 10;
+         }
+         if (c2Hand.indexOf("10") > 0) {
+            c2Points += 10;
+         }
+         if (c2Hand.indexOf("2") > 0) {
+            c2Points += 2;
+         }
+         if (c2Hand.indexOf("3") > 0) {
+            c2Points += 3;
+         }
+         if (c2Hand.indexOf("4") > 0) {
+            c2Points += 4;
+         }
+         if (c2Hand.indexOf("5") > 0) {
+            c2Points += 5;
+         }
+         if (c2Hand.indexOf("6") > 0) {
+            c2Points += 6;
+         }
+         if (c2Hand.indexOf("7") > 0) {
+            c2Points += 7;
+         }
+         if (c2Hand.indexOf("9") > 0) {
+            c2Points += 9;
+         }
+      }
+      return Integer.toString(playerPoints) + "#" + Integer.toString(c1Points) + "*" + Integer.toString(c2Points);
+   }
+
+   private static String makeintox(String xhand) {
+      String Hand = "";
+      for (int i = 0; i < xhand.length(); i++) {
+         String tempstring = xhand.substring(i, i + 1);
+         if (tempstring.equals(" ")) {
+            Hand += " ";
+         } else {
+            Hand += "X";
+         }
+      }
+      return Hand.replaceAll("XXX", "XX");
+   }
+
+   // c1Hand + "-" + topCard + "*" + c2Hand + "#" + topCard
    private static String processPlayer(String playerHand, String topCard, Scanner in) {
       boolean redo = true;
       int maxcards = 0;
@@ -142,27 +311,82 @@ public class CrazyEights {
             if (checkfacecardomputer1(c1Hand, topCard) && c1Hand.indexOf("8") < 0) {// rule 2
                // make it play the first face card that matches the top card in its hand that
                // it can
+               index = c1Hand.indexOf(topCard.substring(0, topCard.length() - 1));
+               if (topCard.substring(0, 2).equals("10")) {
+                  topCard = c1Hand.substring(index, index + 3);
+                  System.out.println(topCard);
+               } else {
+                  topCard = c1Hand.substring(index, index + 2);
+                  System.out.println(topCard);
+               }
             } else if (c1Hand.indexOf("8") >= 0) {// rule 3
                // make them play the 8 and the first suit card in the hand change it too that
                // suit
+               String eight = c1Hand.substring(c1Hand.indexOf("8"), c1Hand.indexOf("8") + 2);
+               c1Hand = c1Hand.replaceFirst(eight + " ", "");
+               if (c1Hand.indexOf("D") >= 0) {
+                  topCard = "8D";
+                  System.out.println(topCard);
+               } else if (c1Hand.indexOf("S") >= 0) {
+                  topCard = "8S";
+                  System.out.println(topCard);
+               } else if (c1Hand.indexOf("H") >= 0) {
+                  topCard = "8H";
+                  System.out.println(topCard);
+               } else if (c1Hand.indexOf("C") >= 0) {
+                  topCard = "8C";
+                  System.out.println(topCard);
+               }
             }
          }
 
          if (checksuitcardcomputer1(c1Hand, topCard) && c1Hand.indexOf("8") < 0) {// rule 1
             // make it play the first suit card in
             // its hand that it can
-            index = (c1Hand.indexOf(topCard.length() - 1, topCard.length())) - 1; // doesnt work for 10 put in if loop
-                                                                                  // or something idk im dumb
-            card = c1Hand.substring(index, c1Hand.indexOf(" ", index));
-            topCard = "" + card;
-            c1Hand = c1Hand.replaceFirst(card + " ", "");
+            index = c1Hand.indexOf(topCard.length() - 1);
+            if (c1Hand.substring(index - 1, index).equals("0")) { // for 10
+               index = (c1Hand.indexOf(topCard.length() - 1));
+               card = c1Hand.substring(index - 1, c1Hand.indexOf(" ", index));
+               topCard = "" + card;
+               c1Hand = c1Hand.replaceFirst(card + " ", "");
+            } else {// doesnt work for 10 put in if loop
+               index = (c1Hand.indexOf(topCard.length() - 1));
+               card = c1Hand.substring(index, c1Hand.indexOf(" ", index));
+               topCard = "" + card;
+               c1Hand = c1Hand.replaceFirst(card + " ", "");
+            }
 
          } else if (checkfacecardomputer1(c1Hand, topCard) && c1Hand.indexOf("8") < 0) {// rule 2
             // make it play the first face card that matches the top card in its hand that
             // it can
+            index = c1Hand.indexOf(topCard.substring(0, topCard.length() - 1));
+            if (topCard.substring(0, 2).equals("10")) {
+               topCard = c1Hand.substring(index, index + 3);
+               System.out.println(topCard);
+            } else {
+               topCard = c1Hand.substring(index, index + 2);
+               System.out.println(topCard);
+            }
          } else if (c1Hand.indexOf("8") >= 0) {// rule 3
             // make them play the 8 and the first suit card in the hand change it too that
             // suit
+            // gets rid of the 8 here
+            // check what the suit of the first card in their hand is
+            String eight = c1Hand.substring(c1Hand.indexOf("8"), c1Hand.indexOf("8") + 2);
+            c1Hand = c1Hand.replaceFirst(eight + " ", "");
+            if (c1Hand.indexOf("D") >= 0) {
+               topCard = "8D";
+               System.out.println(topCard);
+            } else if (c1Hand.indexOf("S") >= 0) {
+               topCard = "8S";
+               System.out.println(topCard);
+            } else if (c1Hand.indexOf("H") >= 0) {
+               topCard = "8H";
+               System.out.println(topCard);
+            } else if (c1Hand.indexOf("C") >= 0) {
+               topCard = "8C";
+               System.out.println(topCard);
+            }
          } else {
             if (maxcardsforcomp < 5) {
                c1Hand += getCard() + " ";
@@ -178,16 +402,38 @@ public class CrazyEights {
             if (checkfacecardomputer2(c2Hand, topCard) && c2Hand.indexOf("8") < 0) {// rule 2
                // make it play the first face card that matches the top card in its hand that
                // it can
+               index = c2Hand.indexOf(topCard.substring(0, topCard.length() - 1));
+               if (topCard.substring(0, 2).equals("10")) {
+                  topCard = c2Hand.substring(index, index + 3);
+                  System.out.println(topCard);
+               } else {
+                  topCard = c2Hand.substring(index, index + 2);
+                  System.out.println(topCard);
+               }
             } else if (c2Hand.indexOf("8") >= 0) { // rule 3
                // make them play the 8 and the first suit card in the hand change it too that
                // suit
+               String eight = c2Hand.substring(c2Hand.indexOf("8"), c2Hand.indexOf("8") + 2);
+               c2Hand = c2Hand.replaceFirst(eight + " ", "");
+               if (c2Hand.indexOf("D") >= 0) {
+                  topCard = "8D";
+                  System.out.println(topCard);
+               } else if (c2Hand.indexOf("S") >= 0) {
+                  topCard = "8S";
+                  System.out.println(topCard);
+               } else if (c2Hand.indexOf("H") >= 0) {
+                  topCard = "8H";
+                  System.out.println(topCard);
+               } else if (c2Hand.indexOf("C") >= 0) {
+                  topCard = "8C";
+                  System.out.println(topCard);
+               }
             }
          }
          if (checksuitcardcomputer2(c2Hand, topCard) && c2Hand.indexOf("8") < 0) {// rule 1
                                                                                   // make it play the first suit card in
                                                                                   // its hand that it can
-            index = (c1Hand.indexOf(topCard.length() - 1, topCard.length())) - 1; // doesnt work for 10 put in if loop
-            // or something idk im dumb
+            index = (c1Hand.indexOf(topCard.length() - 1, topCard.length())) - 1;
             card = c1Hand.substring(index, c1Hand.indexOf(" ", index));
             topCard = "" + card;
             c1Hand = c1Hand.replaceFirst(card + " ", "");
@@ -195,9 +441,32 @@ public class CrazyEights {
          } else if (checkfacecardomputer2(c2Hand, topCard) && c2Hand.indexOf("8") < 0) {// rule 2
             // make it play the first face card that matches the top card in its hand that
             // it can
+            index = c2Hand.indexOf(topCard.substring(0, topCard.length() - 1));
+            if (topCard.substring(0, 2).equals("10")) {
+               topCard = c2Hand.substring(index, index + 3);
+               System.out.println(topCard);
+            } else {
+               topCard = c2Hand.substring(index, index + 2);
+               System.out.println(topCard);
+            }
          } else if (c2Hand.indexOf("8") >= 0) { // rule 3
             // make them play the 8 and the first suit card in the hand change it too that
             // suit
+            String eight = c2Hand.substring(c2Hand.indexOf("8"), c2Hand.indexOf("8") + 2);
+            c2Hand = c2Hand.replaceFirst(eight + " ", "");
+            if (c2Hand.indexOf("D") >= 0) {
+               topCard = "8D";
+               System.out.println(topCard);
+            } else if (c2Hand.indexOf("S") >= 0) {
+               topCard = "8S";
+               System.out.println(topCard);
+            } else if (c2Hand.indexOf("H") >= 0) {
+               topCard = "8H";
+               System.out.println(topCard);
+            } else if (c2Hand.indexOf("C") >= 0) {
+               topCard = "8C";
+               System.out.println(topCard);
+            }
          } else {
             if (maxcardsforcomp < 5) {
                c2Hand += getCard() + " ";
@@ -207,7 +476,7 @@ public class CrazyEights {
          }
       }
 
-      return "-4D";
+      return c1Hand + "-" + topCard + "*" + c2Hand + "#" + topCard;
    }
 
    private static boolean checkfacecardomputer1(String c1Hand, String topCard) {
