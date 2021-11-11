@@ -47,6 +47,9 @@ public class DoubleArraySequence {
     **/
    // Created DoubleArraySequence
    public DoubleArraySequence() {
+      data = new double[DEFAULT_CAPACITY];
+      manyItems = 0;
+      currentIndex = manyItems;
    }
 
    /**
@@ -63,7 +66,14 @@ public class DoubleArraySequence {
     *                                     double[initialCapacity].
     **/
    // Get empty sequence with a specified Capacity
-   public DoubleArraySequence(int initialCapacity) {
+   public DoubleArraySequence(int initialCapacity) throws IllegalArgumentException {
+      if (initialCapacity < 0)
+         throw new IllegalArgumentException("Only Positive Capacitates allowed.");
+
+      manyItems = 0;
+      currentIndex = 0;
+      data = new double[initialCapacity];
+
    }
 
    /**
@@ -75,7 +85,9 @@ public class DoubleArraySequence {
     **/
    // The new double array sequence is a copy of the DoubleArraySequence src.
    public DoubleArraySequence(DoubleArraySequence src) {
-
+      this.manyItems = src.manyItems;
+      this.currentIndex = src.currentIndex;
+      data = new double[src.data.length];
    }
 
    /**
@@ -144,6 +156,7 @@ public class DoubleArraySequence {
     * sequence.
     * 
     * @param - none
+    * @throws IllegalAccessException
     * @precondition isCurrent() returns true.
     * @postcondition If the current element was already the end element of this
     *                sequence (with nothing after it), then there is no longer any
@@ -152,8 +165,11 @@ public class DoubleArraySequence {
     * @exception IllegalStateException Indicates that there is no current element,
     *                                  so advance may not be called.
     **/
-   public void advance() {
-
+   public void advance() throws IllegalStateException {
+      if (!isCurrent())
+         throw new IllegalStateException("No Current Element!");
+      currentIndex++;
+      
    }
 
    /**
@@ -200,7 +216,8 @@ public class DoubleArraySequence {
     * @return the current capacity of this sequence
     **/
    public int getCapacity() {
-      return -1;
+
+      return data.length;
    }
 
    /**
@@ -213,7 +230,9 @@ public class DoubleArraySequence {
     *                                  so getCurrent may not be called.
     **/
    public double getCurrent() {
-      return 0;
+      if (!isCurrent())
+         throw new IllegalStateException("No Current Element");
+      return data[currentIndex];
    }
 
    /**
@@ -226,7 +245,7 @@ public class DoubleArraySequence {
     **/
    public boolean isCurrent() { // see if sequence has a specified current element
 
-      return true;
+      return currentIndex != manyItems;
    }
 
    /**
@@ -253,7 +272,7 @@ public class DoubleArraySequence {
     **/
    public int size() { // Determine the number of elements in this sequence.
 
-      return -1;
+      return manyItems;
    }
 
    /**
@@ -265,7 +284,7 @@ public class DoubleArraySequence {
     *                current element).
     **/
    public void start() {
-
+      currentIndex = 0;
    }
 
    /**
