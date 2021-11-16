@@ -165,7 +165,7 @@ public class DoubleArraySequence {
     * @exception IllegalStateException Indicates that there is no current element,
     *                                  so advance may not be called.
     **/
-   public void advance() throws IllegalStateException {
+   public void advance() throws IllegalStateException { // current problem is here 
       if (!isCurrent())
          throw new IllegalStateException("No Current Element!");
       currentIndex++;
