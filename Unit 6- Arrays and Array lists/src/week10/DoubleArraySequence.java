@@ -107,8 +107,13 @@ public class DoubleArraySequence {
     * @note An attempt to increase the capacity beyond Integer.MAX_VALUE will cause
     *       the sequence to fail with an arithmetic overflow.
     **/
-   public void addAfter(double d) {
-
+   public void addAfter(double d) { // current problem 
+if(){// check if there is a current element 
+// then new element gets put after the current element 
+} else if(){ // if there is no current element 
+// new element is put at the end of sequence 
+}
+// new element becomes the new current element in the sequence 
    }
 
    /**
@@ -165,7 +170,7 @@ public class DoubleArraySequence {
     * @exception IllegalStateException Indicates that there is no current element,
     *                                  so advance may not be called.
     **/
-   public void advance() throws IllegalStateException { // current problem is here 
+   public void advance() throws IllegalStateException { 
       if (!isCurrent())
          throw new IllegalStateException("No Current Element!");
       currentIndex++;
