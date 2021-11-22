@@ -39,7 +39,7 @@ public class DoubleArraySequence {
     * Initialize an empty sequence with an initial capacity of 10. Note that the
     * addAfter and addBefore methods work efficiently (without needing more memory)
     * until this capacity is reached.
-    * 
+    *
     * @param - none
     * @postcondition This sequence is empty and has an initial capacity of 10.
     * @exception OutOfMemoryError Indicates insufficient memory for: new
@@ -56,7 +56,7 @@ public class DoubleArraySequence {
     * Initialize an empty sequence with a specified initial capacity. Note that the
     * addAfter and addBefore methods work efficiently (without needing more memory)
     * until this capacity is reached.
-    * 
+    *
     * @param initialCapacity the initial capacity of this sequence
     * @precondition initialCapacity is non-negative.
     * @postcondition This sequence is empty and has the given initial capacity.
@@ -78,7 +78,7 @@ public class DoubleArraySequence {
 
    /**
     * Initialize a sequence as a copy of an existing sequence.
-    * 
+    *
     * @param src an existing sequence
     * @precondition src is not null.
     * @postcondition This sequence is a copy of the sequence src.
@@ -94,7 +94,7 @@ public class DoubleArraySequence {
     * Add a new element to this sequence, after the current element. If the new
     * element would take this sequence beyond its current capacity, then the
     * capacity is increased before adding the new element.
-    * 
+    *
     * @param d the new element that is being added
     * @postcondition A new copy of the element has been added to this sequence. If
     *                there was a current element, then the new element is placed
@@ -107,20 +107,32 @@ public class DoubleArraySequence {
     * @note An attempt to increase the capacity beyond Integer.MAX_VALUE will cause
     *       the sequence to fail with an arithmetic overflow.
     **/
-   public void addAfter(double d) { // current problem 
-if(){// check if there is a current element 
-// then new element gets put after the current element 
-} else if(){ // if there is no current element 
-// new element is put at the end of sequence 
-}
-// new element becomes the new current element in the sequence 
+   public void addAfter(double d) {
+      if (manyItems >= getCapacity()) {
+         ensureCapacity(manyItems * 2);
+      }
+
+      if (!isCurrent()) {
+         int i = size();
+
+         data[i] = d;
+         currentIndex = i;
+      } else {
+         for (int i = data.length - 1; i > currentIndex + 1; i--) {
+            data[i] = data[i - 1];
+         }
+
+         data[currentIndex + 1] = d;
+         currentIndex++;
+      }
+      manyItems++;
    }
 
    /**
     * Add a new element to this sequence, before the current element. If the new
     * element would take this sequence beyond its current capacity, then the
     * capacity is increased before adding the new element.
-    * 
+    *
     * @param element the new element that is being added
     * @postcondition A new copy of the element has been added to this sequence. If
     *                there was a current element, then the new element is placed
@@ -133,13 +145,26 @@ if(){// check if there is a current element
     * @note An attempt to increase the capacity beyond Integer.MAX_VALUE will cause
     *       the sequence to fail with an arithmetic overflow.
     **/
-   public void addBefore(double element) {
+   public void addBefore(double element) {// current problem to fix
+      if (!isCurrent() || currentIndex == 0) {
+         for (int i = data.length - 1; i > 0; i--) {
+            data[i] = data[i - 1];
+         }
+         data[0] = element;
+         currentIndex = 0;
+      } else {
+         for (int i = data.length - 1; i >= currentIndex && i > 0; i--) {
+            data[i] = data[i - 1];
+         }
 
+         data[currentIndex] = element;
+      }
+      manyItems++;
    }
 
    /**
     * Place the contents of another sequence at the end of this sequence.
-    * 
+    *
     * @param addend a sequence whose contents will be placed at the end of this
     *               sequence
     * @precondition The parameter, addend, is not null.
@@ -153,13 +178,28 @@ if(){// check if there is a current element
     *       an arithmetic overflow that will cause the sequence to fail.
     **/
    public void addAll(DoubleArraySequence addend) {
+      if (addend == null) {
+         throw new NullPointerException("addend is null");
+      }
+      if (manyItems + addend.manyItems >= getCapacity()) {
+         ensureCapacity(getCapacity() * 2);
+      }
+      double temp[] = new double[getCapacity()];
+      for (int i = 0; i < manyItems; i++) {
+         temp[i] = data[i];
+      }
+      for (int i = manyItems; i < manyItems + addend.manyItems; i++) {
+         temp[i] = addend.data[i - manyItems];
+      }
+      manyItems += addend.manyItems;
+      data = temp;
 
    }
 
    /**
     * Move forward, so that the current element is now the next element in this
     * sequence.
-    * 
+    *
     * @param - none
     * @throws IllegalAccessException
     * @precondition isCurrent() returns true.
@@ -170,17 +210,17 @@ if(){// check if there is a current element
     * @exception IllegalStateException Indicates that there is no current element,
     *                                  so advance may not be called.
     **/
-   public void advance() throws IllegalStateException { 
+   public void advance() throws IllegalStateException {
       if (!isCurrent())
          throw new IllegalStateException("No Current Element!");
       currentIndex++;
-      
+
    }
 
    /**
     * Create a new sequence that contains all the elements from one sequence
     * followed by another.
-    * 
+    *
     * @param s1 the first of two sequences
     * @param s2 the second of two sequences
     * @precondition Neither s1 nor s2 is null.
@@ -194,13 +234,30 @@ if(){// check if there is a current element
     *       sequence to fail.
     **/
    public static DoubleArraySequence catenation(DoubleArraySequence s1, DoubleArraySequence s2) {
-      return null;
+      int minimumCapacity = s1.manyItems + s2.manyItems;
+      double[] data = new double[minimumCapacity];
 
+      for (int i = 0; i < s1.manyItems; i++) {
+         data[i] = s1.data[i];
+      }
+
+      for (int i = 0; i < s2.manyItems; i++) {
+         data[i + s1.manyItems] = s2.data[i];
+      }
+
+      DoubleArraySequence s3 = new DoubleArraySequence(minimumCapacity);
+
+      s3.data = data;
+      s3.manyItems = minimumCapacity;
+      s3.currentIndex = minimumCapacity;
+      s3.ensureCapacity(minimumCapacity);
+
+      return s3;
    }
 
    /**
     * Change the current capacity of this sequence.
-    * 
+    *
     * @param minimumCapacity the new capacity for this sequence
     * @postcondition This sequence's capacity has been changed to at least
     *                minimumCapacity. If the capacity was already at or greater
@@ -209,14 +266,20 @@ if(){// check if there is a current element
     *                             int[minimumCapacity].
     **/
    public void ensureCapacity(int minimumCapacity) {
-
+      if (getCapacity() * 2 <= minimumCapacity) {
+         double temp[] = new double[minimumCapacity];
+         for (int i = 0; i < data.length; i++) {
+            temp[i] = data[i];
+         }
+         data = temp;
+      }
    }
 
    /**
     * Accessor method to get the current capacity of this sequence. The add method
     * works efficiently (without needing more memory) until this capacity is
     * reached.
-    * 
+    *
     * @param - none
     * @return the current capacity of this sequence
     **/
@@ -227,7 +290,7 @@ if(){// check if there is a current element
 
    /**
     * Accessor method to get the current element of this sequence.
-    * 
+    *
     * @param - none
     * @precondition isCurrent() returns true.
     * @return the current element of this sequence
@@ -243,7 +306,7 @@ if(){// check if there is a current element
    /**
     * Accessor method to determine whether this sequence has a specified current
     * element that can be retrieved with the getCurrent method.
-    * 
+    *
     * @param - none
     * @return true (there is a current element) or false (there is no current
     *         element at the moment)
@@ -255,7 +318,7 @@ if(){// check if there is a current element
 
    /**
     * Remove the current element from this sequence.
-    * 
+    *
     * @param - none
     * @precondition isCurrent() returns true.
     * @postcondition The current element has been removed from this sequence, and
@@ -266,12 +329,19 @@ if(){// check if there is a current element
     *                                  so removeCurrent may not be called.
     **/
    public void removeCurrent() {
+      if (!isCurrent()) {
+         throw new IllegalStateException("There is no current element");
+      }
+      for (int i = 1; i < getCapacity(); i++) {
+         data[i - 1] = data[i];
 
+      }
+      manyItems--;
    }
 
    /**
     * Determine the number of elements in this sequence.
-    * 
+    *
     * @param - none
     * @return the number of elements in this sequence
     **/
@@ -282,7 +352,7 @@ if(){// check if there is a current element
 
    /**
     * Set the current element at the front of this sequence.
-    * 
+    *
     * @param - none
     * @postcondition The front element of this sequence is now the current element
     *                (but if this sequence has no elements at all, then there is no
@@ -295,7 +365,7 @@ if(){// check if there is a current element
    /**
     * Reduce the current capacity of this sequence to its actual size (i.e., the
     * number of elements it contains).
-    * 
+    *
     * @param - none
     * @postcondition This sequence's capacity has been changed to its current size.
     * @exception OutOfMemoryError Indicates insufficient memory for altering the
