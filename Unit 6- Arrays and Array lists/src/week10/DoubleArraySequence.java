@@ -113,10 +113,10 @@ public class DoubleArraySequence {
       }
 
       if (!isCurrent()) {
-         int i = size();
+         int size = size();
 
-         data[i] = d;
-         currentIndex = i;
+         data[size] = d;
+         currentIndex = size;
       } else {
          for (int i = data.length - 1; i > currentIndex + 1; i--) {
             data[i] = data[i - 1];
@@ -178,21 +178,19 @@ public class DoubleArraySequence {
     *       an arithmetic overflow that will cause the sequence to fail.
     **/
    public void addAll(DoubleArraySequence addend) {
+      int temp = currentIndex;
       if (addend == null) {
          throw new NullPointerException("addend is null");
       }
+
       if (manyItems + addend.manyItems >= getCapacity()) {
-         ensureCapacity(getCapacity() * 2);
+         ensureCapacity(manyItems + addend.manyItems);
       }
-      double temp[] = new double[getCapacity()];
-      for (int i = 0; i < manyItems; i++) {
-         temp[i] = data[i];
-      }
+
       for (int i = manyItems; i < manyItems + addend.manyItems; i++) {
-         temp[i] = addend.data[i - manyItems];
+         addAfter(addend.data[i]);
       }
-      manyItems += addend.manyItems;
-      data = temp;
+      currentIndex = temp;
 
    }
 
@@ -234,25 +232,10 @@ public class DoubleArraySequence {
     *       sequence to fail.
     **/
    public static DoubleArraySequence catenation(DoubleArraySequence s1, DoubleArraySequence s2) {
-      int minimumCapacity = s1.manyItems + s2.manyItems;
-      double[] data = new double[minimumCapacity];
-
-      for (int i = 0; i < s1.manyItems; i++) {
-         data[i] = s1.data[i];
-      }
-
-      for (int i = 0; i < s2.manyItems; i++) {
-         data[i + s1.manyItems] = s2.data[i];
-      }
-
-      DoubleArraySequence s3 = new DoubleArraySequence(minimumCapacity);
-
-      s3.data = data;
-      s3.manyItems = minimumCapacity;
-      s3.currentIndex = minimumCapacity;
-      s3.ensureCapacity(minimumCapacity);
-
-      return s3;
+      DoubleArraySequence temp = new DoubleArraySequence(s1);
+      temp.addAll(s2);
+      temp.currentIndex = temp.manyItems;
+      return temp;
    }
 
    /**
