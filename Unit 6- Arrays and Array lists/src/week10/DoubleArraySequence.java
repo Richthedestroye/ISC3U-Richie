@@ -113,10 +113,10 @@ public class DoubleArraySequence {
       }
 
       if (!isCurrent()) {
-         int i = size();
+         int size = size();
 
-         data[i] = d;
-         currentIndex = i;
+         data[size] = d;
+         currentIndex = size;
       } else {
          for (int i = data.length - 1; i > currentIndex + 1; i--) {
             data[i] = data[i - 1];
@@ -178,18 +178,19 @@ public class DoubleArraySequence {
     *       an arithmetic overflow that will cause the sequence to fail.
     **/
    public void addAll(DoubleArraySequence addend) {
-int temp = currentIndex;      
+      int temp = currentIndex;
       if (addend == null) {
           throw new NullPointerException("addend is null");
       }
 
-      if (manyItems + addend.manyItems > getCapacity()) {
-          ensureCapacity(manyItems + addend.manyItems);
+      if (manyItems + addend.manyItems >= getCapacity()) {
+         ensureCapacity(manyItems + addend.manyItems);
       }
 
-      for (int i = 0; i < addend.manyItems; i++) {
+      for (int i = manyItems; i < manyItems + addend.manyItems; i++) {
          addAfter(addend.data[i]);
       }
+      currentIndex = temp;
 
  currentIndex = temp;
   }
@@ -234,11 +235,7 @@ int temp = currentIndex;
    public static DoubleArraySequence catenation(DoubleArraySequence s1, DoubleArraySequence s2) {
       DoubleArraySequence temp = new DoubleArraySequence(s1);
       temp.addAll(s2);
-
       temp.currentIndex = temp.manyItems;
-
-     
-
       return temp;
    }
 
